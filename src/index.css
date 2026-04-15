@@ -1,163 +1,120 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&family=JetBrains+Mono&display=swap');
 @import "tailwindcss";
 
-@theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  --color-exit-red: #FF0000;
-  --color-exit-muted: #444444;
-}
-
-/* --- RESET & BASE --- */
+/* 1. RESET TOTAL PARA MÓVIL */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
-@layer base {
-  body {
-    @apply bg-black text-white font-sans selection:bg-red-600 selection:text-white;
-    /* Usamos 100dvh para ajuste perfecto en móvil */
-    min-height: 100dvh;
-    overflow-x: hidden;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* Scanline effect (CRT) - Fijo para cubrir siempre la pantalla */
-  body::after {
-    content: " ";
-    position: fixed; 
-    top: 0; left: 0; bottom: 0; right: 0;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-    background-size: 100% 4px, 3px 100%;
-    pointer-events: none;
-    z-index: 100;
-  }
+html, body {
+  /* Evita que la pantalla rebote o se mueva */
+  overflow: hidden; 
+  height: 100%;
+  width: 100%;
+  background-color: #000;
 }
 
-/* --- ESTRUCTURA PRINCIPAL --- */
-.container {
-  flex: 1;
+body {
+  @apply font-sans;
+  /* La unidad dvh es la clave: mide el espacio real libre en el móvil */
+  height: 100dvh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 20px 16px;
-  text-align: center;
-  min-height: 100dvh; 
-  width: 100%;
   position: relative;
-  z-index: 10; /* Por encima del efecto CRT para que se pueda clicar */
+}
+
+/* 2. CONTENEDOR SIN SCROLL */
+.container {
+  position: relative;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  /* Esto obliga a repartir el espacio para que el botón suba */
+  justify-content: space-around; 
+  height: 100dvh;
+  padding: 20px 16px;
+  /* Añadimos el margen de seguridad de los iPhones con notch */
+  padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
+  padding-top: calc(env(safe-area-inset-top) + 10px);
+  text-align: center;
 }
 
 .center {
-  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex: 1;
 }
 
-/* --- EL BOTÓN ROJO (LA ESENCIA) --- */
+/* 3. EL BOTÓN ROJO (ESENCIA RESTAURADA) */
 #exitBtn {
-  /* Restauramos su identidad visual potente */
-  background: #FF0000; /* Rojo puro */
-  color: white;
-  font-family: var(--font-sans);
-  font-weight: 900; /* Súper negrita */
-  text-transform: uppercase;
-  border: none;
-  cursor: pointer;
-  
-  /* Sombra de neón rojo */
-  box-shadow: 0 0 50px rgba(255, 0, 0, 0.6);
-  
-  /* Ajuste de tamaño para móviles */
+  display: inline-block !important;
+  background-color: #FF0000 !important;
+  color: #fff !important;
   width: 100%;
-  max-width: 400px; /* Un poco más ancho si la pantalla lo permite */
-  padding: 24px;
-  border-radius: 20px;
-  
-  /* Font size ultra responsivo: muy grande pero adaptable */
-  font-size: clamp(40px, 15vw, 80px);
-  
-  /* Efectos */
-  transition: all 0.2s ease;
-  letter-spacing: -2px;
-}
-
-#exitBtn:hover {
-  background: #cc0000;
-  box-shadow: 0 0 70px rgba(255, 0, 0, 0.8);
-}
-
-#exitBtn:active {
-  transform: scale(0.96);
+  max-width: 320px;
+  padding: 20px;
+  border-radius: 12px;
+  border: none;
+  font-size: clamp(30px, 10vw, 50px);
+  font-weight: 900;
+  text-transform: uppercase;
   box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+  cursor: pointer;
+  z-index: 60;
 }
 
-/* --- COMPONENTES ADICIONALES --- */
+/* 4. TEXTOS AJUSTADOS PARA QUE NO EMPUJEN HACIA ABAJO */
+.main-text {
+  margin-top: 15px;
+  font-size: clamp(18px, 5vw, 24px);
+  font-weight: 700;
+  color: #fff;
+}
+
+.sub-text {
+  margin: 8px auto 0;
+  font-size: 14px;
+  opacity: 0.5;
+  max-width: 260px;
+}
+
+/* 5. CAPA CRT (SIN BLOQUEAR CLICKS) */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+              linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  background-size: 100% 4px, 3px 100%;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* TAILWIND UTILS */
 @layer components {
-  .warning-stripes {
-    @apply absolute w-full h-[10px] z-50;
-    background: repeating-linear-gradient(
-      -45deg,
-      #000,
-      #000 10px,
-      #222 10px,
-      #222 20px
-    );
-  }
-
   .status-label {
-    @apply font-mono text-[10px] md:text-[12px] tracking-[2px] uppercase opacity-70;
-    margin-bottom: 8px;
+    @apply font-mono text-[10px] uppercase tracking-[3px] opacity-60;
   }
-
   .blinker {
     @apply inline-block w-2 h-2 bg-red-600 rounded-full mr-2 animate-pulse;
   }
 }
 
-/* --- TEXTOS --- */
-.main-text {
-  margin-top: 24px;
-  font-size: clamp(20px, 6vw, 28px);
-  font-weight: 700;
-}
-
-.sub-text {
-  margin-top: 12px;
-  font-size: clamp(14px, 4vw, 18px);
-  opacity: .65;
-  max-width: 320px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.5;
-}
-
-/* --- FOOTER & LINKS --- */
-.bottom {
-  padding-bottom: calc(env(safe-area-inset-bottom) + 15px);
-  margin-top: 20px;
-}
-
 .links {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-top: 16px;
+  gap: 15px;
+  margin-top: 10px;
 }
 
 .links a {
-  @apply transition-opacity hover:opacity-100;
-  color: white;
-  opacity: .5;
+  color: #fff;
+  opacity: 0.3;
   text-decoration: none;
-  font-size: 13px;
-  font-family: var(--font-mono);
+  font-size: 11px;
 }
