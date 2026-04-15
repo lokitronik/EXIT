@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono&display=swap');
 @import "tailwindcss";
 
-/* 1. REGLAS MAESTRAS */
 * {
   margin: 0;
   padding: 0;
@@ -12,110 +11,120 @@ html, body {
   height: 100%;
   width: 100%;
   background-color: #000 !important;
-  overflow: hidden; /* Prohibido el scroll */
+  overflow: hidden; 
+  /* Evita el scroll elástico en iOS */
+  position: fixed; 
 }
 
 body {
   font-family: 'Inter', sans-serif;
+  /* dvh es vital para Safari móvil */
   height: 100dvh;
   display: flex;
   flex-direction: column;
-  position: relative;
 }
 
-/* 2. CONTENEDOR (OCUPA EL 100% REAL) */
 .container {
   position: relative;
   z-index: 50;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; 
+  justify-content: space-between;
   height: 100%;
-  padding: 20px;
-  padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
+  /* Añadimos padding extra abajo para Safari */
+  padding: 20px 16px calc(env(safe-area-inset-bottom) + 20px);
+  padding-top: calc(env(safe-area-inset-top) + 10px);
 }
 
 .center {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centra el botón verticalmente */
+  justify-content: center;
   align-items: center;
   width: 100%;
 }
 
-/* 3. EL BOTÓN ROJO (ESTILO FORZADO) */
+/* EL BOTÓN ROJO - Mantenemos tu éxito visual */
 #exitBtn, .exit-button {
   display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  background-color: #FF0000 !important; /* ROJO PURO */
+  background-color: #FF0000 !important;
   color: #FFFFFF !important;
   width: 90% !important;
-  max-width: 350px !important;
-  margin: 0 auto !important;
+  max-width: 340px !important;
   padding: 25px !important;
+  border-radius: 16px !important;
   border: none !important;
-  border-radius: 12px !important;
-  font-size: clamp(40px, 12vw, 70px) !important;
+  font-size: clamp(35px, 10vw, 60px) !important;
   font-weight: 900 !important;
   text-transform: uppercase !important;
-  box-shadow: 0 0 40px rgba(255, 0, 0, 0.7) !important;
+  box-shadow: 0 0 50px rgba(255, 0, 0, 0.6) !important;
   cursor: pointer !important;
-  z-index: 999 !important;
+  line-height: 1;
 }
 
-/* 4. TEXTOS (PARA QUE NO SE AMONTONEN) */
+#exitBtn:active { transform: scale(0.96); }
+
+/* TEXTOS */
 .main-text {
-  font-size: clamp(16px, 5vw, 24px);
+  font-size: clamp(18px, 5vw, 24px);
   font-weight: 700;
   margin-top: 20px;
+  text-align: center;
 }
 
 .sub-text {
-  font-size: clamp(12px, 4vw, 15px);
+  font-size: 13px;
   opacity: 0.5;
-  max-width: 250px;
-  margin: 10px auto 0;
+  max-width: 280px;
+  margin: 8px auto 0;
+  text-align: center;
 }
 
-/* 5. FOOTER (LIMPIANDO LOS LINKS AMONTONADOS) */
+/* FOOTER - Reparando los links amontonados */
 .bottom {
   width: 100%;
-  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.deployed-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  opacity: 0.4;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .links {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap; /* Si no caben, bajan de línea */
+  flex-wrap: wrap; /* Permite que bajen si no hay espacio */
   gap: 15px;
-  margin-top: 10px;
 }
 
 .links a {
   color: #fff !important;
-  opacity: 0.5;
-  text-decoration: none;
+  opacity: 0.6;
+  text-decoration: underline; /* Ayuda a distinguir que son links */
   font-size: 11px;
   font-family: 'JetBrains Mono', monospace;
-  white-space: nowrap; /* Evita que el link se rompa en dos líneas */
 }
 
-/* 6. EFECTO CRT (SIN BLOQUEAR) */
+/* CAPA CRT */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), 
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), 
               linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
   background-size: 100% 4px, 3px 100%;
   pointer-events: none;
   z-index: 100;
 }
 
-/* COMPONENTES EXTRAS */
 @layer components {
   .status-label {
     @apply font-mono text-[10px] uppercase tracking-[2px] opacity-70;
