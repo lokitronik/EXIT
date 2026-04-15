@@ -18,7 +18,7 @@
 @layer base {
   body {
     @apply bg-black text-white font-sans selection:bg-red-600 selection:text-white;
-    /* Usamos 100dvh para que se ajuste perfectamente ignorando las barras del navegador móvil */
+    /* Usamos 100dvh para ajuste perfecto en móvil */
     min-height: 100dvh;
     overflow-x: hidden;
     position: relative;
@@ -26,10 +26,10 @@
     flex-direction: column;
   }
 
-  /* Scanline effect (CRT) */
+  /* Scanline effect (CRT) - Fijo para cubrir siempre la pantalla */
   body::after {
     content: " ";
-    position: fixed; /* Fixed para que no se mueva con el scroll */
+    position: fixed; 
     top: 0; left: 0; bottom: 0; right: 0;
     background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
                 linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
@@ -41,7 +41,6 @@
 
 /* --- ESTRUCTURA PRINCIPAL --- */
 .container {
-  /* Flexbox para empujar el contenido y mantener el footer abajo */
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -50,6 +49,8 @@
   text-align: center;
   min-height: 100dvh; 
   width: 100%;
+  position: relative;
+  z-index: 10; /* Por encima del efecto CRT para que se pueda clicar */
 }
 
 .center {
@@ -60,7 +61,45 @@
   align-items: center;
 }
 
-/* --- COMPONENTES --- */
+/* --- EL BOTÓN ROJO (LA ESENCIA) --- */
+#exitBtn {
+  /* Restauramos su identidad visual potente */
+  background: #FF0000; /* Rojo puro */
+  color: white;
+  font-family: var(--font-sans);
+  font-weight: 900; /* Súper negrita */
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  
+  /* Sombra de neón rojo */
+  box-shadow: 0 0 50px rgba(255, 0, 0, 0.6);
+  
+  /* Ajuste de tamaño para móviles */
+  width: 100%;
+  max-width: 400px; /* Un poco más ancho si la pantalla lo permite */
+  padding: 24px;
+  border-radius: 20px;
+  
+  /* Font size ultra responsivo: muy grande pero adaptable */
+  font-size: clamp(40px, 15vw, 80px);
+  
+  /* Efectos */
+  transition: all 0.2s ease;
+  letter-spacing: -2px;
+}
+
+#exitBtn:hover {
+  background: #cc0000;
+  box-shadow: 0 0 70px rgba(255, 0, 0, 0.8);
+}
+
+#exitBtn:active {
+  transform: scale(0.96);
+  box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+}
+
+/* --- COMPONENTES ADICIONALES --- */
 @layer components {
   .warning-stripes {
     @apply absolute w-full h-[10px] z-50;
@@ -73,20 +112,9 @@
     );
   }
 
-  /* El botón ahora es más flexible en móviles */
-  #exitBtn {
-    @apply bg-red-600 text-white font-black px-8 py-6 
-           hover:bg-red-700 active:scale-95 transition-all uppercase
-           shadow-[0_0_50px_rgba(255,0,0,0.4)] border-none cursor-pointer tracking-tighter;
-    width: 100%;
-    max-width: 320px;
-    border-radius: 16px;
-    /* Font size responsivo: clamp(mínimo, preferencia, máximo) */
-    font-size: clamp(32px, 12vw, 60px);
-  }
-
   .status-label {
     @apply font-mono text-[10px] md:text-[12px] tracking-[2px] uppercase opacity-70;
+    margin-bottom: 8px;
   }
 
   .blinker {
@@ -97,24 +125,24 @@
 /* --- TEXTOS --- */
 .main-text {
   margin-top: 24px;
-  font-size: clamp(18px, 5vw, 24px);
+  font-size: clamp(20px, 6vw, 28px);
   font-weight: 700;
 }
 
 .sub-text {
-  margin-top: 10px;
-  font-size: clamp(13px, 4vw, 16px);
+  margin-top: 12px;
+  font-size: clamp(14px, 4vw, 18px);
   opacity: .65;
-  max-width: 280px;
+  max-width: 320px;
   margin-left: auto;
   margin-right: auto;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 /* --- FOOTER & LINKS --- */
 .bottom {
-  /* Respeta el área segura de iPhones (Notch inferior) */
-  padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 15px);
+  margin-top: 20px;
 }
 
 .links {
