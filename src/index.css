@@ -1,77 +1,3 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  background: #000;
-  color: #fff;
-  font-family: Arial, sans-serif;
-}
-
-.container {
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 20px 16px;
-  text-align: center;
-}
-
-.center {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-#exitBtn {
-  width: 100%;
-  max-width: 320px;
-  margin: 0 auto;
-  padding: 20px;
-  border: none;
-  border-radius: 16px;
-  background: red;
-  color: white;
-  font-size: clamp(28px, 9vw, 46px);
-  font-weight: 700;
-}
-
-.main-text {
-  margin-top: 24px;
-  font-size: clamp(20px, 5vw, 28px);
-}
-
-.sub-text {
-  margin-top: 10px;
-  font-size: clamp(14px, 4vw, 18px);
-  opacity: .65;
-  max-width: 320px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.bottom {
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-.links {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 14px;
-  margin-top: 16px;
-}
-
-.links a {
-  color: white;
-  opacity: .75;
-  text-decoration: none;
-  font-size: 14px;
-}
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
 @import "tailwindcss";
 
@@ -82,18 +8,28 @@ body {
   --color-exit-muted: #444444;
 }
 
+/* --- RESET & BASE --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 @layer base {
   body {
     @apply bg-black text-white font-sans selection:bg-red-600 selection:text-white;
-    overflow: hidden;
+    /* Usamos 100dvh para que se ajuste perfectamente ignorando las barras del navegador móvil */
+    min-height: 100dvh;
+    overflow-x: hidden;
     position: relative;
-    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
 
-  /* Scanline effect */
+  /* Scanline effect (CRT) */
   body::after {
     content: " ";
-    position: absolute;
+    position: fixed; /* Fixed para que no se mueva con el scroll */
     top: 0; left: 0; bottom: 0; right: 0;
     background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
                 linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
@@ -103,6 +39,28 @@ body {
   }
 }
 
+/* --- ESTRUCTURA PRINCIPAL --- */
+.container {
+  /* Flexbox para empujar el contenido y mantener el footer abajo */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 16px;
+  text-align: center;
+  min-height: 100dvh; 
+  width: 100%;
+}
+
+.center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- COMPONENTES --- */
 @layer components {
   .warning-stripes {
     @apply absolute w-full h-[10px] z-50;
@@ -115,17 +73,63 @@ body {
     );
   }
 
-  .exit-button {
-    @apply bg-red-600 text-white font-black text-6xl md:text-[120px] px-12 md:px-20 py-6 
+  /* El botón ahora es más flexible en móviles */
+  #exitBtn {
+    @apply bg-red-600 text-white font-black px-8 py-6 
            hover:bg-red-700 active:scale-95 transition-all uppercase
            shadow-[0_0_50px_rgba(255,0,0,0.4)] border-none cursor-pointer tracking-tighter;
+    width: 100%;
+    max-width: 320px;
+    border-radius: 16px;
+    /* Font size responsivo: clamp(mínimo, preferencia, máximo) */
+    font-size: clamp(32px, 12vw, 60px);
   }
 
   .status-label {
-    @apply font-mono text-[12px] tracking-[2px] uppercase;
+    @apply font-mono text-[10px] md:text-[12px] tracking-[2px] uppercase opacity-70;
   }
 
   .blinker {
     @apply inline-block w-2 h-2 bg-red-600 rounded-full mr-2 animate-pulse;
   }
+}
+
+/* --- TEXTOS --- */
+.main-text {
+  margin-top: 24px;
+  font-size: clamp(18px, 5vw, 24px);
+  font-weight: 700;
+}
+
+.sub-text {
+  margin-top: 10px;
+  font-size: clamp(13px, 4vw, 16px);
+  opacity: .65;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.4;
+}
+
+/* --- FOOTER & LINKS --- */
+.bottom {
+  /* Respeta el área segura de iPhones (Notch inferior) */
+  padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
+}
+
+.links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.links a {
+  @apply transition-opacity hover:opacity-100;
+  color: white;
+  opacity: .5;
+  text-decoration: none;
+  font-size: 13px;
+  font-family: var(--font-mono);
 }
