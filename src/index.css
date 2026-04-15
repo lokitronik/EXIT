@@ -1,120 +1,129 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&family=JetBrains+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono&display=swap');
 @import "tailwindcss";
 
-/* 1. RESET TOTAL PARA MÓVIL */
+/* 1. Reset y fijación de pantalla completa */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
 }
 
 html, body {
-  /* Evita que la pantalla rebote o se mueva */
-  overflow: hidden; 
   height: 100%;
   width: 100%;
   background-color: #000;
+  overflow: hidden; /* Evita el scroll global que arruina la experiencia móvil */
 }
 
 body {
-  @apply font-sans;
-  /* La unidad dvh es la clave: mide el espacio real libre en el móvil */
+  font-family: 'Inter', sans-serif;
+  /* dvh se adapta dinámicamente si aparece la barra del navegador */
   height: 100dvh;
   display: flex;
   flex-direction: column;
   position: relative;
 }
 
-/* 2. CONTENEDOR SIN SCROLL */
+/* 2. Contenedor principal: Ajusta el espacio para que nada se salga */
 .container {
   position: relative;
   z-index: 50;
   display: flex;
   flex-direction: column;
-  /* Esto obliga a repartir el espacio para que el botón suba */
-  justify-content: space-around; 
-  height: 100dvh;
+  justify-content: space-between; /* Empuja los links al fondo y el status arriba */
+  height: 100%;
   padding: 20px 16px;
-  /* Añadimos el margen de seguridad de los iPhones con notch */
-  padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
-  padding-top: calc(env(safe-area-inset-top) + 10px);
+  /* Margen inferior para el área segura de iPhone */
+  padding-bottom: calc(env(safe-area-inset-bottom) + 15px);
   text-align: center;
 }
 
+/* 3. El centro (Botón y textos principales) */
 .center {
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex: 1;
+  gap: 10px;
 }
 
-/* 3. EL BOTÓN ROJO (ESENCIA RESTAURADA) */
+/* EL BOTÓN ROJO - Identidad restaurada */
 #exitBtn {
-  display: inline-block !important;
+  display: block !important;
   background-color: #FF0000 !important;
   color: #fff !important;
   width: 100%;
   max-width: 320px;
-  padding: 20px;
-  border-radius: 12px;
+  padding: 22px;
+  border-radius: 16px;
   border: none;
-  font-size: clamp(30px, 10vw, 50px);
+  font-size: clamp(35px, 12vw, 60px);
   font-weight: 900;
   text-transform: uppercase;
-  box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+  box-shadow: 0 0 40px rgba(255, 0, 0, 0.6);
   cursor: pointer;
-  z-index: 60;
+  transition: transform 0.1s ease, background-color 0.2s;
 }
 
-/* 4. TEXTOS AJUSTADOS PARA QUE NO EMPUJEN HACIA ABAJO */
+#exitBtn:active {
+  transform: scale(0.95);
+  background-color: #cc0000 !important;
+}
+
+/* 4. Textos */
 .main-text {
-  margin-top: 15px;
-  font-size: clamp(18px, 5vw, 24px);
+  font-size: clamp(18px, 5vw, 26px);
   font-weight: 700;
+  margin-top: 15px;
   color: #fff;
 }
 
 .sub-text {
-  margin: 8px auto 0;
   font-size: 14px;
-  opacity: 0.5;
-  max-width: 260px;
+  opacity: 0.6;
+  max-width: 280px;
+  margin: 5px auto 0;
 }
 
-/* 5. CAPA CRT (SIN BLOQUEAR CLICKS) */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-              linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-  background-size: 100% 4px, 3px 100%;
-  pointer-events: none;
-  z-index: 100;
-}
-
-/* TAILWIND UTILS */
-@layer components {
-  .status-label {
-    @apply font-mono text-[10px] uppercase tracking-[3px] opacity-60;
-  }
-  .blinker {
-    @apply inline-block w-2 h-2 bg-red-600 rounded-full mr-2 animate-pulse;
-  }
+/* 5. Información inferior (Links y Footer) */
+.bottom {
+  width: 100%;
 }
 
 .links {
   display: flex;
   justify-content: center;
-  gap: 15px;
-  margin-top: 10px;
+  gap: 20px;
+  margin-top: 15px;
 }
 
 .links a {
   color: #fff;
-  opacity: 0.3;
+  opacity: 0.4;
   text-decoration: none;
-  font-size: 11px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* 6. Capa de efecto CRT (Scanlines) - pointer-events:none es clave */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), 
+              linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+  background-size: 100% 4px, 3px 100%;
+  pointer-events: none; 
+  z-index: 100;
+}
+
+/* Clases de Tailwind que usas en el HTML */
+@layer components {
+  .status-label {
+    @apply font-mono text-[11px] uppercase tracking-[2px] opacity-70;
+  }
+  .blinker {
+    @apply inline-block w-2 h-2 bg-red-600 rounded-full mr-2 animate-pulse;
+  }
 }
